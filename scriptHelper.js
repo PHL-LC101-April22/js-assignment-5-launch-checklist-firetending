@@ -14,6 +14,17 @@ function addDestinationInfo(document, name, diameter, star, distance, moons, ima
                  </ol>
                  <img src="">
     */
+    let missionTarget = document.getElementById("missionTarget");
+    missionTarget.innerHTML = `
+    <h2>Mission Destination</h2>
+    <ol>
+        <li>Name: ${name}</li>
+        <li>Diameter: ${diameter}</li>
+        <li>Star: ${star}</li>
+        <li>Distance from Earth: ${distance}</li>
+        <li>Number of Moons: ${moons}</li>
+    </ol>
+    <img src="${imageUrl}">`
 }
 
 
@@ -67,21 +78,21 @@ function formSubmission(document, list, pilot, copilot, fuelLevel, cargoLevel) {
     let fuelStatus = document.getElementById("fuelStatus");
     let cargoStatus = document.getElementById("cargoStatus");
     pilotStatus.innerHTML = `Pilot ${pilot} is ready for launch`
-    copilotStatus.innerHTML = `Co-Pilot ${copilot} is ready for launch`
+    copilotStatus.innerHTML = `Co-pilot ${copilot} is ready for launch`
 
     //fuel and cargo checks
     let checkStatus = 0;
     if (fuelLevel < 10000) {
-        fuelStatus.innerHTML = `Fuel level is too low to launch`;
+        fuelStatus.innerHTML = `Fuel level too low for launch`;
         checkStatus -= 1;
     } else {
-        fuelStatus.innerHTML = `Fuel level is ok; ready for launch`;
+        fuelStatus.innerHTML = `Fuel level high enough for launch`;
     }
     if (cargoLevel > 10000) {
-        cargoStatus.innerHTML = `Cargo mass is too high to launch`;
+        cargoStatus.innerHTML = `Cargo mass too heavy for launch`;
         checkStatus -= 1;
     } else {
-        cargoStatus.innerHTML = `Cargo mass is ok; ready for launch`;
+        cargoStatus.innerHTML = `Cargo mass low enough for launch`;
     }
     if (checkStatus < 0) {
         statusNotReady();
@@ -90,17 +101,17 @@ function formSubmission(document, list, pilot, copilot, fuelLevel, cargoLevel) {
     }
 
     function statusNotReady() {
-        launchStatus.innerHTML = "Shuttle not ready for launch"
-        launchStatus.style = "color: red";
         list.style.visibility = "visible";
-        list.style.display = "block";
+        launchStatus.innerHTML = "Shuttle Not Ready for Launch"
+        launchStatus.style = "color: rgb(199, 37, 78)";
+        // list.style.display = "block";
     }
 
     function statusReady() {
-        launchStatus.innerHTML = "Shuttle is ready for launch"
-        launchStatus.style = "color: green";
-        list.style.visibility = "hidden";
-        list.style.display = "none";
+        list.style.visibility = "visible";
+        launchStatus.innerHTML = "Shuttle is Ready for Launch"
+        launchStatus.style = "color: rgb(65, 159, 106)";
+        // list.style.display = "none";
 
     }
 }
@@ -108,13 +119,14 @@ function formSubmission(document, list, pilot, copilot, fuelLevel, cargoLevel) {
 async function myFetch() {
     let planetsReturned;
 
-    planetsReturned = await fetch().then(function (response) {
-    });
-
+    planetsReturned = await fetch("https://handlers.education.launchcode.org/static/planets.json").then(function (response) {
+        return response.json();
+    })
     return planetsReturned;
 }
 
 function pickPlanet(planets) {
+    return planets[Math.floor(Math.random() * planets.length)];
 }
 
 module.exports.addDestinationInfo = addDestinationInfo;
